@@ -4,6 +4,7 @@
 
 >目前框架源码与实际项目还在分离中， 目前使用的版本， 有问题或者建议，欢迎大家在issues中提。
 
+
 ## install
 
 ```javascript
@@ -25,6 +26,8 @@
 
 
 ## 快速指南
+
+`视频教程地址： `[http://v.qq.com/vplus/962b27e96a60d6a4d198c58fb86eb4dc?page=cover](http://v.qq.com/vplus/962b27e96a60d6a4d198c58fb86eb4dc?page=cover)
 
 1.首先我们创建一个control: `index.ts`
 目前我们默认是`application/json`的响应数据.
