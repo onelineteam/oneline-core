@@ -46,7 +46,7 @@ export function init() {
             const filter: HttpFilter = ObjectCreator.create(element) as HttpFilter;
             const session: MongodbSession[] = [];
             await handlerProperty.call(filter, filter.constructor, session);
-            //  log.debug("------>处理完", key);
+
             const result = await filter.chain(app, request, response, key, value);
             closeSessionQuick(session);
             if (!result.success) {
@@ -76,7 +76,7 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
     const name = paramNames[index];
     const typeName = options.paramtypes[index];
 
-    log.debug("=================>><<>>>", typeName, name);
+
     if (typeName === String || typeName === Number || typeName === Object || typeName === Array) {
       let aliasName: string = ComponentStore.getInstance().getParamName(this, name);
       handlerString.call(values, request, aliasName || name, index);
@@ -89,16 +89,16 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
       if (comp !== null) {
         handlerBody.call(values, request, comp, index);
 
-        log.debug("这里是: ", comp.options);
+
         const options = comp.options as ComponentParamOptions;
         //验证对象的规则
         const value: Object = values[index];
-        // log.debug("当前body的对象值:", value)
+
 
         const issuccess: number = await validateObject(value, response, options ? options.rule : undefined);
         if (issuccess == -1) return;
 
-        ///////////
+
       }
     }
   }
@@ -120,9 +120,6 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
     }
   } catch (error) {
 
-    console.log(error, '错误信息')
-    //
-    // log.debug(error instanceof MongoError)
     let code = 2500;
     if (error instanceof MongoError) {
       code = 2900;
@@ -197,15 +194,12 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
   if (options.query) {
     const query = options.query;
     Object.keys(query).forEach(key => {
-      log.debug("处理body中的内容", key, query[key], request.query, typeof body[key]);
-      const keys:any = query[key];
 
-      console.log(keys.constructor, keys)
-      if( Array.isArray(keys)) {
+      const keys: any = query[key];
+
+      if (Array.isArray(keys)) {
         keys.forEach(k => {
-          // console.log(keys[index], );
-          // console.log(keys[index], request.query[key], request.params[key])
-          bodyValue[k] =  request.query[key] || request.params[key];
+          bodyValue[k] = request.query[key] || request.params[key];
         })
       } else {
         bodyValue[query[key]] = request.query[key] || request.params[key];
@@ -217,30 +211,20 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
   function handlerBodyKey(object: Object, value: Object) {
     Object.keys(value).forEach(key => {
       if (key in object) {
-        //if (typeof object[key] === "object" && !(object[key] instanceof Array)) {
-        // const subvalue = object[key];
-        // object[key] = ObjectCreator.create(subvalue.constructor);
-        // if(subvalue) {
-        //   handlerBodyKey(object[key], subvalue);
-        // }
-        //} else {
-        // log.debug("==========>", key, value[key])
         object[key] = value[key];
-        // }
       }
     });
   }
 
-  // log.debug("==========>", body)
 
   this[index] = body;
 }
 
 function handlerString(request: FastifyRequest<http.IncomingMessage>, name: string, index: number) {
-  // log.debug("string param", name, request.query)
+
 
   const params = { ...request.params, ...request.query, ...request.body };
-  log.debug("-------------------------------------------------------------------", params, name, this[index]);
+
   if (name in params) {
     this[index] = params[name];
     if (/^\d+$/.test(params[name])) {
@@ -263,19 +247,19 @@ function handlerHttpResponse(response: FastifyReply<http.ServerResponse>, name: 
 // 3. 请求体
 
 export async function validateObject(value: Object, response: FastifyReply<http.ServerResponse>, ruleMap: any = undefined): Promise<number> {
-  // log.debug(">>>>>>>>>>>>>>", ruleMap, value)
+
   const column: ComponentBean = ComponentStore.getInstance().getColumn(value.constructor);
   if (column || ruleMap) {
     let options: ComponentColumnOptions = (ruleMap && { rules: ruleMap }) || (column && <ComponentColumnOptions>column.options);
 
-    // log.debug("rules: ", options, Object.keys(options))
+
     const keys: string[] = Object.keys(options.rules);
     for (let j: number = 0; j < keys.length; j++) {
       const key: string = keys[j];
 
       if (key === "isUpdate") continue;
 
-      log.debug("key: --->", key);
+
       const ruleObject: any = options.rules[key];
 
       if (ruleObject.ignore) {
@@ -293,7 +277,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
         }
 
         const isnumber = value[key].constructor === String && ruleObject.type === Number && /^\d+(\.\d+)*$/.test(value[key]);
-        // log.debug('isnumber', key, isnumber);
+
         if (ruleObject.type && value[key].constructor !== ruleObject.type) {
           if (!isnumber) {
             log.debug("类型不匹配:", value[key].constructor, ruleObject.type, key);
@@ -303,10 +287,10 @@ export async function validateObject(value: Object, response: FastifyReply<http.
         }
 
         if (ruleObject.rules) {
-          // log.debug(ruleObject.rules)
+
           for (let r: number = 0; r < ruleObject.rules.length; r++) {
             const rule: any = ruleObject.rules[r];
-            // log.debug("开始验证:", ruleObject, key)
+
 
             if (rule.regx) {
               //regx的优先级最高, 如果regx设置, 则email, required等默认的格式验证, 则被忽略
@@ -316,7 +300,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                   message = rule.message;
                 }
                 message = message + ":" + (ruleObject.label || key);
-                // log.debug(message);
+
                 response.send(HttpResult.toFail({ message: message }));
 
                 log.debug(message);
@@ -331,7 +315,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                   const session: MongodbSession[] = [];
                   await handlerProperty.call(dao, dao.constructor, session);
                   const item = await dao[rule.method]({ [key]: value[key] });
-                  log.debug("查询到的:", item);
+
                   closeSessionQuick(session); //关闭
                   if (item == null) {
                     if (rule.value && typeof rule.value === "function") {
@@ -340,8 +324,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                       value[key] = new ObjectID().toHexString();
                     }
                   } else {
-                    value["isUpdate"] = true; //
-                    log.debug("我这里设置了更新----->", value);
+                    value["isUpdate"] = true; // 
                   }
                 } else if (rule.value && typeof rule.value === "function") {
                   value[key] = rule.value();
@@ -363,7 +346,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                       message = rule.message;
                     }
                     message = message + ":" + (ruleObject.label || key);
-                    // log.debug(message);
+
                     response.send(HttpResult.toFail({ message: message }));
 
                     return -1;
@@ -386,14 +369,14 @@ export async function validateObject(value: Object, response: FastifyReply<http.
 
               if (rule.email) {
                 const email = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
-                // log.debug('验证邮箱:', email.test(value[key]))
+
                 if (!email.test(value[key])) {
                   let message: string = "邮箱格式不正确";
                   if (rule.message) {
                     message = rule.message;
                   }
                   message = message + ":" + (ruleObject.label || key);
-                  // log.debug(message);
+
                   response.send(HttpResult.toFail({ message: message }));
                   log.debug(message);
                   return -1;
