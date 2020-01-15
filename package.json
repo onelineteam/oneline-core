@@ -1,7 +1,7 @@
 {
   "name": "@oneline/core",
   "version": "0.0.16",
-  "description": "way system framework",
+  "description": "一个快速开发web系统的框架",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
