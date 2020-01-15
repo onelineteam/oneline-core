@@ -1,0 +1,58 @@
+{
+  "name": "@oneline/core",
+  "version": "0.0.16",
+  "description": "way system framework",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cwatch": "tsc --watch",
+    "build": "tsc"
+  },
+  "author": "towaywu@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/keep2zero/way/issues"
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "globals.d.ts"
+  ],
+  "repository": "https://github.com/keep2zero/oneline-core",
+  "homepage": "https://github.com/keep2zero/oneline-core#README",
+  "typings": "index.d.ts",
+  "devDependencies": {
+    "dts-generator": "^3.0.0",
+    "typescript": "^3.2.4"
+  },
+  "dependencies": {
+    "@keep2zero/vuejs-logger": "^1.0.0",
+    "@kyleshockey/xml": "^1.0.2",
+    "@oneline/utils": "^0.0.0",
+    "@types/mongodb": "^3.3.14",
+    "@types/node": "^13.1.6",
+    "axios": "^0.19.0",
+    "esprima": "^4.0.1",
+    "fastify": "^2.1.0",
+    "fastify-cookie": "^3.0.2",
+    "fastify-cors": "^2.1.2",
+    "fastify-multipart": "^0.8.0",
+    "fastify-plugin": "^1.5.0",
+    "fastify-session": "^2.0.1",
+    "flakeid": "^1.0.0",
+    "image-data-uri": "^2.0.1",
+    "jstoxml": "^1.4.4",
+    "lodash": "^4.17.11",
+    "module-alias": "^2.1.0",
+    "moment": "^2.24.0",
+    "mongodb": "^3.2.3",
+    "mysql2": "^1.6.4",
+    "nodemailer": "^6.0.0",
+    "pinyin": "^2.9.0",
+    "ramda": "^0.26.1",
+    "reflect-metadata": "^0.1.12",
+    "serve-static": "^1.13.2",
+    "xml-js": "^1.6.11",
+    "xml2json-light": "^1.0.6"
+  }
+}
