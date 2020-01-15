@@ -1,6 +1,6 @@
 # oneline-core
 
-一个基于[fastify](https://github.com/fastify/fastify)的视图层框架. 我们使用的是typescript来完成开发.
+一个快速开发web系统的框架. 我们使用的是typescript来完成开发.
 
 >目前框架源码与实际项目还在分离中， 目前使用的版本， 有问题或者建议，欢迎大家在issues中提。
 
