@@ -66,7 +66,7 @@
 ### start
 
 ```javascript
- const app = start(port: number, options: WayOptions, filters: HttpFilter[]);
+ const app = start(port: number, options: WayOptions, filters: HttpFilter[], callback: Function);
 ```
 
 **app** 为fastify实例对象. 可以根据[fastify](https://www.fastify.io/)功能,增加相关功能
@@ -134,6 +134,9 @@ abstract class HttpFilter {
 ```
 
 `HttpFilter`为过滤器, 它是一个抽象类, 需要实现这个类. 这里可以根据自己的需求来加入系统的过滤器.
+
+
+`callback` 为一个回调函数. 启动完成后,会执行该函数.
 
 ## 请求注解功能
 
