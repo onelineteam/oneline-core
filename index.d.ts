@@ -253,7 +253,7 @@ export interface Dao<T> {
 	updateMany(entry: T, filter: FilterQuery<any>): any;
 	delete(filter: Object, multi?: boolean): any;
 }
-export abstract class MongodbDao<T> implements Dao<T> {
+export abstract class DefaultDao<T> implements Dao<T> {
 	abstract table: string;
 	abstract session: MongodbSession;
 	findListForeign(join: any[], index: number, size: number, filter?: any, lookup?: number, sort?: any): Promise<any[]>;
@@ -285,7 +285,7 @@ export interface Service<T> {
 	updateMany(object: T, filter: Object): any;
 	delete(id: string): any;
 }
-export abstract class MongodbService<T> implements Service<T> {
+export abstract class DefaultService<T> implements Service<T> {
 	abstract dao: Dao<T>;
 	findList(index: number, size: number, filter?: any, sort?: any): Promise<{
 		rows: any;
