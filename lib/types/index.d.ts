@@ -1,7 +1,8 @@
 declare interface WayOptions {
   db?: WayDBOptions;
   cros?: WayCrosOptions;
-  static?: {prefix: string, path: string}
+  static?: {prefix: string, path: string},
+  jsEngine?:any;
 }
 
 declare interface WayDBOptions {

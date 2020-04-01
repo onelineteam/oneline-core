@@ -11,9 +11,12 @@ export class HttpRequest {
     
    }
 
+   
+
    getRequest(): any {
        return this.request;
    }
+
    getSession() {
        return this.request.session;
    }

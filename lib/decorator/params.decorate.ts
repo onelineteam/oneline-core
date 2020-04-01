@@ -1,6 +1,6 @@
 import { ComponentBean, ComponentType, ComponentParamOptions, ComponentStore, PARAMTYPE } from "../component";
 import { getFuncParamsName } from "../utils";
-import { type } from "os";
+ 
 
 
 export function Param(options?:string|any, mode: PARAMTYPE = 'NORMAL'):Function {
