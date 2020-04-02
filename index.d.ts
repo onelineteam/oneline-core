@@ -110,6 +110,9 @@ export function Column(options: Object): (target: Object, propKey: string) => vo
 
 export function Component(name?: string): (target: any) => void;
 
+export function Type(type: string, temp: string, engine:string):void;
+export function HtmlType(temp: string, engine: string):void;
+
 
 
 /// <reference types="fastify-cookie" />
@@ -367,6 +370,24 @@ export const idGenerator: {
 	objectId(id?: string): string;
 };
 
+
+export class Start {
+  addEngine(type: string, engine:(temp: string, context:any) => Promise<string>|string):Start;
+  setHandlebarsEngine(engine:any):Start;
+  setEjsEngine(engine:any):Start;
+  setEngineOptions(options:any):Start;
+  setView(path: string):Start;
+  setDefaultEngine(engineName: string):Start;
+  setErrorJsonFormat(isJson: boolean):Start;
+  configCors(cors: WayCrosOptions):Start;
+  configStatic(prefix: string, path: string):Start;
+  configLog(showed: boolean):Start;
+  configUploadSize(size: number):Start;  
+  configDb(config):Start;
+  addFilter(filter: HttpFilter):Start;
+  start(port: number, host:string, callback: Function);
+  start(port: number, hostCallback:string|Function, callback?: any):void;
+}
 
 
 
