@@ -371,7 +371,7 @@ export const idGenerator: {
 };
 
 
-export class Start {
+export interface Start {
   addEngine(type: string, engine:(temp: string, context:any) => Promise<string>|string):Start;
   setHandlebarsEngine(engine:any):Start;
   setEjsEngine(engine:any):Start;
@@ -385,8 +385,8 @@ export class Start {
   configUploadSize(size: number):Start;  
   configDb(config):Start;
   addFilter(filter: HttpFilter):Start;
-  start(port: number, host:string, callback: Function);
-  start(port: number, hostCallback:string|Function, callback?: any):void;
+  start(port: number, host:string, callback: Function):FastifyInstance;
+  start(port: number, hostCallback:string|Function, callback?: any):FastifyInstance;
 }
 
 

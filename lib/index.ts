@@ -206,8 +206,8 @@ export class Start {
     return this;
   }
 
-  start(port: number, host:string, callback: Function);
-  start(port: number, hostCallback:string|Function = "0.0.0.0", callback?: any) {
+  start(port: number, host:string, callback: Function):any;
+  start(port: number, hostCallback:string|Function = "0.0.0.0", callback?: any):any {
 
     this.initParse();
     this.initPlugins();
@@ -217,6 +217,8 @@ export class Start {
     callback = hostCallback instanceof Function ? hostCallback: callback;
 
     app.listen(port, host, callback);
+
+    return app;
 
   }
 }
