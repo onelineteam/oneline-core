@@ -127,6 +127,11 @@ export class Start {
     return this;
   }
 
+  setErrorJsonFormat(isJson: boolean) {
+    templateEngine.errorJsonFormat = isJson;
+    return this;
+  }
+
   configCors(cors: WayCrosOptions) {
     app.register(require('fastify-cors'), {
       ...cors

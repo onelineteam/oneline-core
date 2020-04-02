@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 class TemplateEngine {
+  errorJsonFormat:boolean = true;
   type:string = 'application/json';
   rootPath: string = path.resolve();
   viewPath: string = "view";
@@ -31,7 +32,10 @@ class TemplateEngine {
       return new Promise(promises);
     }
 
+  }
 
+  setErrorJsonFormat(isJson: boolean) {
+    return this.errorJsonFormat = isJson;
   }
 
   setOptions(options:any) {
