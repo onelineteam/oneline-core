@@ -69,6 +69,37 @@
  const app = start(port: number, options: WayOptions, filters: HttpFilter[], callback: Function);
 ```
 
+我们还可以通过`Start`类来启动项目：
+
+```javascript
+  const startServer = new Start();
+  startServer.start(3000, ()=>{
+    console.log("启动项目在端口： 3000")
+  })
+```
+
+详细的`Start`的声明如下：
+
+```javascript
+ class Start {
+  addEngine(type: string, engine:(temp: string, context:any) => Promise<string>|string):Start;
+  setHandlebarsEngine(engine:any):Start;
+  setEjsEngine(engine:any):Start;
+  setEngineOptions(options:any):Start;
+  setView(path: string):Start;
+  setDefaultEngine(engineName: string):Start;
+  setErrorJsonFormat(isJson: boolean):Start;
+  configCors(cors: WayCrosOptions):Start;
+  configStatic(prefix: string, path: string):Start;
+  configLog(showed: boolean):Start;
+  configUploadSize(size: number):Start;  
+  configDb(config):Start;
+  addFilter(filter: HttpFilter):Start;
+  start(port: number, host:string, callback: Function):FastifyInstance;
+  start(port: number, hostCallback:string|Function, callback?: any):FastifyInstance;
+}
+```
+
 **app** 为fastify实例对象. 可以根据[fastify](https://www.fastify.io/)功能,增加相关功能
 
 #### WayOptions
@@ -368,4 +399,20 @@ abstract class HttpFilter {
 
 ```
 
-## 文档还在继续完善
+## 模板渲染
+
+### Type,  HtmlType
+
+`Type`, `HtmlType`是用来指定函数响应什么样的格式数据给用户。其实目前主要是用来后端渲染界面。默认是Json数据格式的返回。
+
+```javascript
+  function Type(type: string, temp: string, engine:string):void;
+  function HtmlType(temp: string, engine?: string):void;
+```
+
+`Type`的参数type为`content-type`的值, `temp` 为渲染的界面文件名, `engine`为渲染引擎的名称, 默认有handlebars, ejs. 但是必须由开发者调用`Start`类的方法： setHandlebarsEngine, setEjsEngine来引入引擎模块。如果要自定义引擎， 请调用`Start`方法： `addEngine`。
+
+
+`HtmlType`是基于Type的默认了type为**text/html**。
+
+
