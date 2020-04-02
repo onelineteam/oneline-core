@@ -15,21 +15,13 @@ import { responseError } from "./response";
 
 export const app: fastify.FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse> = fastify();
 
-// app.addHook("onError", (req, response, error, done) => {
-//   console.log("onError")
-// })
-
-
+ 
 app.setNotFoundHandler((req, reply) => {
-  responseError.call(reply,true,  404, "Not Found");
+  responseError.call(reply,  templateEngine.errorJsonFormat,  404, "Not Found");
 })
 
 
-// app.setReplySerializer(function (payload, statusCode){
-//   // serialize the payload with a sync function
-//   return `my serialized ${statusCode} content: ${payload}`
-// })
-
+ 
 
 // app.setErrorHandler((error, request, response) => {
 //   console.log(error);
@@ -155,7 +147,7 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
   } catch (error) {
 
     let code = "2000"; 
-    responseError.call(response, !template, code, error.toString());
+    responseError.call(response, templateEngine.errorJsonFormat, code, error.toString());
     //有数据库
     // response.send(
     //   HttpResult.toFail({
