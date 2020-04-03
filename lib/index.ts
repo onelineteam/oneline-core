@@ -27,10 +27,7 @@ export function start(port: number, options?: WayOptions, filtersOut?: Object[],
   if (!Log["$log"]) {
     logSetting({ showDev: false });
   }
-
-  if (options.jsEngine) {
-    Object.keys(options.jsEngine).forEach(key => templateEngine[key] = options.jsEngine[key])
-  }
+ 
 
   //
   app.addContentTypeParser(['text/xml', 'application/xml'], { parseAs: 'string' }, function (req: IncomingMessage, body: string, done) {
@@ -157,7 +154,7 @@ export class Start {
   }
 
 
-  configDb(config) {
+  configDb(config: WayDBOptions) {
     initDb(config)
     return this;
   }
