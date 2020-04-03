@@ -1,6 +1,6 @@
 {
   "name": "@oneline/core",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "一个快速开发web系统的框架",
   "main": "dist/index.js",
   "publishConfig": {
@@ -31,7 +31,7 @@
   "dependencies": {
     "@keep2zero/vuejs-logger": "^1.0.0",
     "@kyleshockey/xml": "^1.0.2",
-    "@oneline/utils": "^0.0.0",
+    "@oneline/utils": "^0.0.7",
     "@types/mongodb": "^3.3.14",
     "@types/node": "^13.1.6",
     "axios": "^0.19.0",
