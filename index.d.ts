@@ -383,7 +383,7 @@ export interface Start {
   configStatic(prefix: string, path: string):Start;
   configLog(showed: boolean):Start;
   configUploadSize(size: number):Start;  
-  configDb(config):Start;
+  configDb(config:WayDBOptions):Start;
   addFilter(filter: HttpFilter):Start;
   start(port: number, host:string, callback: Function):FastifyInstance;
   start(port: number, hostCallback:string|Function, callback?: any):FastifyInstance;
