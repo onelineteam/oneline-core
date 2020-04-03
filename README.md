@@ -93,7 +93,7 @@
   configStatic(prefix: string, path: string):Start;
   configLog(showed: boolean):Start;
   configUploadSize(size: number):Start;  
-  configDb(config):Start;
+  configDb(config: WayDBOptions):Start;
   addFilter(filter: HttpFilter):Start;
   start(port: number, host:string, callback: Function):FastifyInstance;
   start(port: number, hostCallback:string|Function, callback?: any):FastifyInstance;
@@ -250,11 +250,9 @@ abstract class HttpFilter {
 
 **required**: 不能为空验证. 如果需要检测是否在数据库存在, 加入`connect: {dao: Dao, method: string, key: string}`
 
-
 **email**: 邮箱验证
 
 **unique**: 唯一验证. 需要对比数据库的数据情况. `{dao: Dao, method: string, key: string, self: boolean}`. 如果self为true, 则代表更新状态.则不需要与自己作对比.
-
 
 #### 例子
 
@@ -412,7 +410,18 @@ abstract class HttpFilter {
 
 `Type`的参数type为`content-type`的值, `temp` 为渲染的界面文件名, `engine`为渲染引擎的名称, 默认有handlebars, ejs. 但是必须由开发者调用`Start`类的方法： setHandlebarsEngine, setEjsEngine来引入引擎模块。如果要自定义引擎， 请调用`Start`方法： `addEngine`。
 
-
 `HtmlType`是基于Type的默认了type为**text/html**。
 
+例如：
+
+```javascript
+  class TemplateAction {
+
+    @Get("/index")
+    @HtmlType("index.html") //默认为handlebars
+    public index() {
+      return {title: 'home'}
+    }
+  }
+```
 
