@@ -371,7 +371,7 @@ export const idGenerator: {
 };
 
 
-export interface Start {
+export class Start {
   addEngine(type: string, engine:(temp: string, context:any) => Promise<string>|string):Start;
   setHandlebarsEngine(engine:any):Start;
   setEjsEngine(engine:any):Start;

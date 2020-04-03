@@ -1,6 +1,7 @@
 // import 'reflect-metadata';
 import * as path from 'path';
 import * as fs from 'fs';
+import {parsePathParams} from '@oneline/utils';
 
 class TemplateEngine {
   errorJsonFormat:boolean = true;
@@ -12,19 +13,26 @@ class TemplateEngine {
   handlebarsEngine: any = null;
   ejsEngine: any = null;
   defaultEngine: string = "handlebars";
-   
+    
+
   constructor() {
 
+    
     this.engines["handlebars"] =  (temp, context) => {
-      if(this.handlebarsEngine == null) throw new Error("请先设置你的handlebarsEngine");
-      const source = fs.readFileSync([this.rootPath, this.viewPath,temp].join("/")).toString('utf-8');
+      if(this.handlebarsEngine == null) throw new Error("请先设置你的handlebarsEngine"); 
+      const tempPath = parsePathParams([this.rootPath, this.viewPath,temp].join("/"), context); 
+      const source = fs.readFileSync(["/", tempPath].join("")).toString('utf-8');
       return this.handlebarsEngine.compile(source)(context, this.options);
     }
 
     this.engines.ejs = (temp, context) => { 
       if(this.ejsEngine == null) throw new Error("请先设置你的ejsEngine");
       const promises = (resolve, inject) => {
-        this.ejsEngine.renderFile([this.rootPath, this.viewPath,temp].join("/"), context, this.options, (err, result) => {
+        // const source = fs.readFileSync([this.rootPath, this.viewPath,temp].join("/")).toString('utf-8');
+        // const html = this.ejsEngine.render(source, context, this.options);
+        // resolve(html);
+        const filePath = parsePathParams([this.rootPath, this.viewPath,temp].join("/"), context)
+        this.ejsEngine.renderFile(["/", filePath].join(""), context, this.options, (err, result) => {
           if (err) throw err
           resolve(result);
         })
