@@ -110,8 +110,8 @@ export function Column(options: Object): (target: Object, propKey: string) => vo
 
 export function Component(name?: string): (target: any) => void;
 
-export function Type(type: string, temp: string, engine:string):void;
-export function HtmlType(temp: string, engine?: string):void;
+export function Type(type: string, temp: string, engine:string): (target: Object | Function, ...args: any[]) => void;
+export function HtmlType(temp: string, engine?: string): (target: Object | Function, ...args: any[]) => void;
 
 
 
