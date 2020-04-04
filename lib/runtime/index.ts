@@ -1,3 +1,4 @@
+export * from './validator';
 import * as http from "http";
 import * as fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
