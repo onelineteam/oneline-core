@@ -95,6 +95,7 @@ export function start(port: number, options?: WayOptions, filtersOut?: Object[],
 //这里即将使用
 export class Start {
 
+  private uploadSize: number = 1024 * 1024 * 15 * 1024;
   addEngine(type: string, engine:(temp: string, context:any) => Promise<string>|string) {
     templateEngine.addEngine(type, engine);
     return this;
@@ -149,7 +150,7 @@ export class Start {
 
 
   configUploadSize(size: number = 1024 * 1024 * 15 * 1024) {
-    app.register(WayMultipart, { limits: { fileSize: size } });
+    this.uploadSize = size;
     return this;
   }
 
@@ -195,6 +196,8 @@ export class Start {
         maxAge: 1000 * 60 * 60 * 24
       },
     });
+
+    app.register(WayMultipart, { limits: { fileSize: this.uploadSize } });
   }
 
 
@@ -207,8 +210,9 @@ export class Start {
   start(port: number, hostCallback:string|Function = "0.0.0.0", callback?: any):any {
 
     this.initParse();
-    this.initPlugins();
+    this.initPlugins(); 
     init();
+
 
     const host = typeof hostCallback === "string" ? hostCallback: 'localhost';
     callback = hostCallback instanceof Function ? hostCallback: callback;
