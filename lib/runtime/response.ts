@@ -38,7 +38,7 @@ export function responseError(isJson: boolean, status: string, message: string) 
   `
 
   if(isJson) {
-    errortemplateContent = HttpResult.fail({code: status, message: message})
+    errortemplateContent = JSON.stringify(HttpResult.fail({code: status, message: message}));
   } else {
     this.type("text/html");
   }
