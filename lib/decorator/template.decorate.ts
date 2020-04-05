@@ -40,7 +40,10 @@ class TemplateEngine {
         try {
           const filePath = parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
           this.ejsEngine.renderFile(["/", filePath].join(""), context, this.options, (err, result) => {
-            if (err) throw err
+            if (err) {
+              log.debug(err);
+              inject(err);
+            }
             resolve(result);
           })
         } catch (error) {
@@ -87,9 +90,9 @@ class TemplateEngine {
 export const Templates = {};
 export const templateEngine = new TemplateEngine();
 
-export function templateEngineRender(engine: string, template: string, context: any) {
+export async function templateEngineRender(engine: string, template: string, context: any) {
   if (!templateEngine.engines[engine]) throw new Error("还未设置该引擎: " + engine);
-  return templateEngine.engines[engine](template, context, templateEngine.viewPath);
+  return await templateEngine.engines[engine](template, context, templateEngine.viewPath);
 }
 
 export function Type(type: string, temp: string, engine: string) {
