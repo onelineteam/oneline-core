@@ -1,6 +1,6 @@
 {
   "name": "@oneline/core",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "一个快速开发web系统的框架",
   "main": "dist/index.js",
   "publishConfig": {
