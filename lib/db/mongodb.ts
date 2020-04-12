@@ -21,7 +21,7 @@ export default class MongodbSession implements Session {
     async open() {
         const url = `mongodb://${MongodbSession.username}:${MongodbSession.password}@${MongodbSession.host}:${MongodbSession.port}`;
         log.debug(url);
-        this.client = await MongoClient.connect(url, { useNewUrlParser: true });
+        this.client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
         this.db = await this.client.db(MongodbSession.database);
     }
 
