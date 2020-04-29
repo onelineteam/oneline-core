@@ -134,11 +134,13 @@ export class HttpResponse {
 }
 
 
+
 export class ObjectCreator {
 	static create(constructor: any): Object;
 }
 
 
+export function parsePage(total: number, index: number, size: number);
 
 export interface Session {
 	open(): any;
