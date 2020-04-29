@@ -1,4 +1,5 @@
 export * from './validator';
+export * from './object-creator';
 import * as http from "http";
 import * as fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";

@@ -3,7 +3,7 @@
 // 2. 请求参数
 // 3. 请求体
 
-import { ComponentBean, ComponentStore, ComponentColumnOptions, HttpResult, MongodbSession, handlerProperty, closeSessionQuick } from "..";
+import { ComponentBean, ComponentStore, ComponentColumnOptions, HttpResult, MongodbSession, handlerProperty, closeSessionQuick, isArray } from "..";
 import { FastifyReply } from "fastify";
 import { ObjectCreator } from "./object-creator";
 import { ObjectID } from "mongodb";
@@ -155,13 +155,22 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                   const session: MongodbSession[] = [];
                   await handlerProperty.call(dao, dao.constructor, session);
                   let item = null;
+
+                  const filter:any = {[key]: value[key]};
+                  if(rule.related && isArray(rule.related)) {
+                    rule.related.forEach(item => {
+                      if(!value.hasOwnProperty(item)) throw new Error("实体类没有当前字段：" + item);
+                      filter[item] = value[item];
+                    })
+                  }
+
                   if (rule.self) {
                     const sourceItem = await dao[rule.method]({ [rule.key]: value[rule.key] });
                     if (sourceItem[key] !== value[key]) {
-                      item = await dao[rule.method]({ [key]: value[key] });
+                      item = await dao[rule.method]({ ...filter });
                     }
                   } else {
-                    item = await dao[rule.method]({ [key]: value[key] });
+                    item = await dao[rule.method]({ ...filter });
                   }
 
                   closeSessionQuick(session); //关闭
