@@ -1,6 +1,6 @@
 import Dao from "./dao";
 import { ObjectID } from "bson";
-import { Component } from "../../../";
+import { Component, parsePage } from "../../../";
 export interface Service<T> {
   findList(index: number, size: number, filter?: any, sort?: any, fields?: any);
   save(object: T | T[]);
@@ -9,14 +9,17 @@ export interface Service<T> {
   delete(id: string);
 }
 
+
 export abstract class DefaultService<T> implements Service<T> {
   abstract dao: Dao<T>;
   async findList(index: number, size: number, filter: any = {}, sort: any = {}) {
+
+    const total = await this.dao.findCount(filter);
+    const page = parsePage(total, index, size);
+
     return {
       rows: await this.dao.findList(index, size, filter, sort),
-      page: {
-        total: await this.dao.findCount(filter)
-      }
+      page: page
     };
   }
 
