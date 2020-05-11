@@ -1,6 +1,6 @@
 {
   "name": "@oneline/core",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "一个快速开发web系统的框架",
   "main": "dist/index.js",
   "publishConfig": {
@@ -49,7 +49,7 @@
     "lodash": "^4.17.11",
     "module-alias": "^2.1.0",
     "moment": "^2.24.0",
-    "mongodb": "^3.2.3",
+    "mongodb": "^3.5.7",
     "mysql2": "^1.6.4",
     "nodemailer": "^6.0.0",
     "pinyin": "^2.9.0",
