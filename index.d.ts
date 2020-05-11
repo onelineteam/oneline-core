@@ -279,6 +279,7 @@ export abstract class DefaultDao<T> implements Dao<T> {
 	update(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	updateMany(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	delete(filter: Object, multi?: boolean): Promise<import("mongodb").DeleteWriteOpResultObject>;
+	transaction(callback: (cs: ClientSession, db: Db) => void, options: any):Promise<Boolean>;
 }
 
 
@@ -310,6 +311,7 @@ export abstract class DefaultService<T> implements Service<T> {
 	updateMany(object: T, filter: Object): Promise<any>;
 	delete(id: string): Promise<any>;
 	deleteBy(filter: Object, multi?: boolean): Promise<any>;
+	transaction(callback: (cs: ClientSession, db: Db) => void, options?: any):Promise<Boolean>;
 }
 
 

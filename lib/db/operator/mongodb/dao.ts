@@ -15,6 +15,7 @@ export default interface Dao<T> {
   update(object: T, filter: FilterQuery<any>);
   updateMany(entry: T, filter: FilterQuery<any>);
   delete(filter: Object, multi?: boolean);
+  transaction(callback: (cs: ClientSession, db: Db) => void, options: any):Promise<boolean>;
 }
 
 @Component()
@@ -94,6 +95,28 @@ export abstract class DefaultDao<T> implements Dao<T> {
       return await this.session.saveList(this.table, entry);
     }
     return await this.session.saveItem(this.table, entry);
+  }
+
+
+  async transaction(callback: (cs: ClientSession, db: Db) => void, options: any ={}) {
+    let ok = false;
+    const session = this.session.client.startSession();
+    
+    try { 
+      await session.withTransaction(async () => {
+        callback(session, this.session.db);
+    }, options);
+
+    ok = true;
+      
+    } catch (error) {
+      throw error;
+    } finally {
+      session.endSession();
+    }
+   
+    return true;
+
   }
 
   async operationByTransaction(callback: (cs: ClientSession, db: Db) => void) {

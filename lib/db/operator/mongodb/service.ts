@@ -1,12 +1,14 @@
 import Dao from "./dao";
 import { ObjectID } from "bson";
 import { Component, parsePage } from "../../../";
+import { ClientSession, Db } from "mongodb";
 export interface Service<T> {
   findList(index: number, size: number, filter?: any, sort?: any, fields?: any);
   save(object: T | T[]);
   update(object: T, filter: Object);
   updateMany(object: T, filter: Object);
   delete(id: string);
+  transaction(callback: (cs: ClientSession, db: Db) => void, options?: any):Promise<boolean>;
 }
 
 
@@ -77,5 +79,9 @@ export abstract class DefaultService<T> implements Service<T> {
   async deleteBy(filter: Object, multi: boolean = false) {
     log.debug("--------->delete ", filter, multi);
     return await this.dao.delete(filter, multi);
+  }
+
+  async transaction(callback: (cs: ClientSession, db: Db) => void, options?: any) {
+    return await this.dao.transaction(callback, options);
   }
 }
