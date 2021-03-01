@@ -22,7 +22,15 @@ export class HttpResult {
     }
 
 
-    static ok(options): HttpResult {
+    static ok(options:any): HttpResult {
+        if(typeof options == "string") {
+            options = {message: options}
+        }
+
+        if(typeof options == "object" && (!options.data) && (!options.message) && (!options.extra)) {
+          options = {data: options}
+        }
+
         return this.toOk(options);
     }
 
