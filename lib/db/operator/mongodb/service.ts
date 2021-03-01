@@ -8,7 +8,7 @@ export interface Service<T> {
   update(object: T, filter: Object);
   updateMany(object: T, filter: Object);
   delete(id: string);
-  transaction(callback: (cs: ClientSession, db: Db) => void, options?: any):Promise<boolean>;
+  transaction(callback: (cs: ClientSession, db: Db) => void, binds?:any, options?: any, sessionOptions?: any):Promise<boolean>;
 }
 
 
@@ -81,7 +81,7 @@ export abstract class DefaultService<T> implements Service<T> {
     return await this.dao.delete(filter, multi);
   }
 
-  async transaction(callback: (cs: ClientSession, db: Db) => void, options?: any) {
-    return await this.dao.transaction(callback, options);
+  async transaction(callback: (cs: ClientSession, db: Db) => void, binds?: any, options?: any, sessionOptions?: any) {
+    return await this.dao.transaction(callback, binds, options, sessionOptions);
   }
 }

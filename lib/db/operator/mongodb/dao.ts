@@ -1,6 +1,7 @@
 import { FilterQuery, ObjectID, ClientSession, Db } from "mongodb";
 import { MongodbSession, Component } from "../../..";
 
+const primaryObject = [String, Boolean, Number, Array, Object, Function, Date, Math, Set];
 export default interface Dao<T> {
   findList(index: number, size: number, filter?: any, sort?: any);
   findListAll(filter: any, fields?: any, sort?: any);
@@ -15,13 +16,19 @@ export default interface Dao<T> {
   update(object: T, filter: FilterQuery<any>);
   updateMany(entry: T, filter: FilterQuery<any>);
   delete(filter: Object, multi?: boolean);
-  transaction(callback: (cs: ClientSession, db: Db) => void, options: any):Promise<boolean>;
+  transaction(callback: (cs: ClientSession, db: Db) => void, binds: any, options: any, sessionOption?: any): Promise<boolean>;
 }
 
 @Component()
 export abstract class DefaultDao<T> implements Dao<T> {
   abstract table: string; //必须指定
   abstract session: MongodbSession; //必须制定
+
+
+
+  async batch(callback:Function, isOrder: boolean = false) {
+   await this.session.batch(this.table, isOrder, callback);
+  }
 
   async findListForeign(join: any[], index: number, size: number, filter: any = {}, lookup: number = 0, sort: any = {}) {
     return await this.session.findByForeign(this.table, join, index, size, filter, lookup, sort);
@@ -98,23 +105,35 @@ export abstract class DefaultDao<T> implements Dao<T> {
   }
 
 
-  async transaction(callback: (cs: ClientSession, db: Db) => void, options: any ={}) {
+  async transaction(callback: (cs: ClientSession, context: any) => void, binds: any = [], options: any = { readConcern: { level: "snapshot" }, writeConcern: { w: "majority" } }, sessionOption?: any) {
     let ok = false;
-    const session = this.session.client.startSession();
-    
-    try { 
-      await session.withTransaction(async () => {
-        callback(session, this.session.db);
-    }, options);
 
-    ok = true;
-      
+    const session = this.session.client.startSession(sessionOption);
+    try {
+      await session.startTransaction(options);
+
+      if (Array.isArray(binds)) {
+        //
+        binds.forEach((item: any) => {
+          item.dao.session.options = { ...item.dao.session.options, session }
+        })
+      } else {
+        findMongoSessionTransaction(binds, session);
+      }
+
+      // await session.withTransaction(async () => {
+      //   callback(session, this.session.db);
+      // }, options);
+      await callback(session, this.session);
+      await session.commitTransaction();
+      ok = true;
     } catch (error) {
+      await session.abortTransaction();
       throw error;
     } finally {
-      session.endSession();
+      await session.endSession();
     }
-   
+
     return true;
 
   }
@@ -160,4 +179,23 @@ export abstract class DefaultDao<T> implements Dao<T> {
     }
     return await this.session.deleteItem(this.table, filter);
   }
+}
+
+/**
+ * 递归注入事务session
+ * @param context 
+ * @param session 
+ */
+function findMongoSessionTransaction(context: any, session: any) {
+
+  if (context instanceof MongodbSession) {
+    context.options = Object.assign(Object.assign({}, context.options), { session });
+  } else if (context && context.constructor && primaryObject.indexOf(context.constructor) === -1) {
+
+    Object.getOwnPropertyNames(context).forEach(item => {
+      findMongoSessionTransaction(context[item], session);
+    });
+  }
+
+
 }

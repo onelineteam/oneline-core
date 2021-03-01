@@ -1,4 +1,3 @@
-import { ComponentStore } from "../component";
 
 export  class ObjectCreator {
     static create (constructor:any):Object{ 

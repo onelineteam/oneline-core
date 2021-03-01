@@ -1,5 +1,5 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { IncomingMessage, ServerResponse } from "http";
+import {  FastifyReply } from "fastify";
+import {  ServerResponse } from "http";
  
 
 export class HttpRequest {

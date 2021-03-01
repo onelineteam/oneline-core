@@ -25,7 +25,8 @@ export async function validateObject(value: Object, response: FastifyReply<http.
 
       const ruleObject: any = options.rules[key];
 
-      if (ruleObject.ignore) {
+      
+      if (ruleObject.rules.findIndex(rule => rule.ignore) > -1) {
         delete value[key]; //不能更新
         continue;
       }

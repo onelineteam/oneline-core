@@ -1,7 +1,7 @@
 export * from './validator';
 export * from './object-creator';
 import * as http from "http";
-import * as fastify from "fastify";
+import { FastifyInstance } from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ComponentStore, ComponentBean, ComponentActionOptions, ComponentParamOptions, ComponentPropertyOptions, ComponentColumnOptions } from "../component";
 import { HttpRequest, HttpResponse } from "../http/in-out.http";
@@ -12,10 +12,11 @@ import { HttpFilter } from "../http";
 import { Templates, templateEngineRender, templateEngine } from '../decorator';
 import { validateObject } from './validator';
 import { responseError } from "./response";
+import fastify = require('fastify');
 
 
 
-export const app: fastify.FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse> = fastify();
+export const app: FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse> = fastify();
 
  
 app.setNotFoundHandler((req, reply) => {
@@ -240,6 +241,8 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
     Object.keys(value).forEach(key => {
       if (key in object) {
         object[key] = value[key];
+      } else {
+        delete object[key];
       }
     });
   }

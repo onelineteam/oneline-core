@@ -1,8 +1,7 @@
 
-import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 import { FastifyReply, FastifyInstance, FastifyRequest } from 'fastify';
 import { ServerResponse, IncomingMessage, Server } from 'http';
-import { MongoClient, Db, FilterQuery, ClientSession, ObjectID } from 'mongodb';
+import { MongoClient, Db, FilterQuery, ClientSession, ObjectID  } from 'mongodb';
 /// <reference types="node" />
 export {FastifyReply, FastifyRequest, FastifyInstance} from 'fastify';
 export enum ComponentType {
@@ -140,7 +139,7 @@ export class ObjectCreator {
 }
 
 
-export function parsePage(total: number, index: number, size: number);
+export function parsePage(total: number, index: number, size: number):any;
 
 export interface Session {
 	open(): any;
@@ -151,6 +150,7 @@ export interface Session {
 	updateItem(table: string, bean: Object, filter: Object): any;
 	deleteItem(table: string, filter: Object): any;
 	findByNosql(table: string, key: string, sql: any): any;
+	batch(table: string, isOrder: boolean, callback: Function): Promise<void>;
 }
 
 export class MongodbSession implements Session {
@@ -165,23 +165,24 @@ export class MongodbSession implements Session {
 	constructor();
 	open(): Promise<void>;
 	findByNosql(table: any, key: string, sql: any): Promise<any>;
-	findByForeign(table: string, join: Array<any>, index: number, size: number, filter: Object, lookup?: number, sort?: any): Promise<any[]>;
-	findByForeignCount(table: string, join: Array<any>, filter: Object, lookup?: number): Promise<number>;
+	findByForeign(table: string, join: Array<any>, index: number, size: number, filter: Object|Array<any>, lookup?: number, sort?: any): Promise<any[]>;
+	findByForeignCount(table: string, join: Array<any>, filter: Object|Array<any>, lookup?: number): Promise<number>;
 	findCore(table: string, index: number, size: number, filter: Object, sort?: any, fields?: any): Promise<any[]>;
 	find(table: string, filter: any, sort: any, fields: any): Promise<any[]>;
 	count(table: string, filter: FilterQuery<any>): Promise<number>;
 	findItem(table: string, filter: FilterQuery<any>): Promise<any>;
 	saveItem(table: string, bean: Object): Promise<import("mongodb").InsertOneWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: import("bson").ObjectId;
+		_id: ObjectId;
 	}>>;
 	saveList(table: string, beans: Array<Object>): Promise<import("mongodb").InsertWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: import("bson").ObjectId;
+		_id: ObjectId;
 	}>>;
 	updateItem(table: string, bean: Object, wheres: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	updateMany(table: string, bean: Object, wheres: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	deleteItem(table: string, wheres: FilterQuery<any>): Promise<import("mongodb").DeleteWriteOpResultObject>;
 	deleteList(table: string, wheres: FilterQuery<any>): Promise<import("mongodb").DeleteWriteOpResultObject>;
 	close(): void;
+	batch(table: string, isOrder: boolean, callback: Function): Promise<void>;
 }
 
 
@@ -279,7 +280,8 @@ export abstract class DefaultDao<T> implements Dao<T> {
 	update(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	updateMany(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
 	delete(filter: Object, multi?: boolean): Promise<import("mongodb").DeleteWriteOpResultObject>;
-	transaction(callback: (cs: ClientSession, db: Db) => void, options: any):Promise<Boolean>;
+	transaction(callback: (cs: ClientSession, db: Db) => void, binds: any,  options: any, sessionOption?:any): Promise<boolean>;
+	batch(callback:Function, isOrder: boolean): Promise<void>;
 }
 
 
@@ -311,7 +313,8 @@ export abstract class DefaultService<T> implements Service<T> {
 	updateMany(object: T, filter: Object): Promise<any>;
 	delete(id: string): Promise<any>;
 	deleteBy(filter: Object, multi?: boolean): Promise<any>;
-	transaction(callback: (cs: ClientSession, db: Db) => void, options?: any):Promise<Boolean>;
+	transaction(callback: (cs: ClientSession, db: Db) => void, binds?: any, options?: any, sessionOptions?: any):any
+	
 }
 
 
