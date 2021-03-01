@@ -24,12 +24,14 @@ export function Param(options?:string|any, mode: PARAMTYPE = 'NORMAL'):Function 
            methodName: methodName,
            method: target[methodName],
            type: component.value,
-           mode: mode 
+           mode: mode,
+           extra: {} 
        }
        if(typeof options === "object") {
          (<ComponentParamOptions>component.options).rule = options.rule;
          (<ComponentParamOptions>component.options).query = options.query;
-         (<ComponentParamOptions>component.options).aliasName = options.aliasName || ""
+         (<ComponentParamOptions>component.options).aliasName = options.aliasName || "";
+         (<ComponentParamOptions>component.options).extra = options.extra || {};
        }
     //    log.debug('params --> ', Reflect.getMetadata("design:paramtypes", target, methodName)[index])
 

@@ -8,7 +8,7 @@ import { HttpRequest, HttpResponse } from "../http/in-out.http";
 import { ObjectCreator } from "./object-creator";
 import MongodbSession from "../db/mongodb";
 import { HttpFilter } from "../http";
- 
+
 import { Templates, templateEngineRender, templateEngine } from '../decorator';
 import { validateObject } from './validator';
 import { responseError } from "./response";
@@ -18,13 +18,13 @@ import fastify = require('fastify');
 
 export const app: FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse> = fastify();
 
- 
+
 app.setNotFoundHandler((req, reply) => {
-  responseError.call(reply,  templateEngine.errorJsonFormat,  404, "Not Found");
+  responseError.call(reply, templateEngine.errorJsonFormat, 404, "Not Found");
 })
 
 
- 
+
 
 // app.setErrorHandler((error, request, response) => {
 //   console.log(error);
@@ -149,7 +149,7 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
     }
   } catch (error) {
 
-    let code = "2000"; 
+    let code = "2000";
     responseError.call(response, templateEngine.errorJsonFormat, code, error.toString());
     //有数据库
     // response.send(
@@ -218,6 +218,8 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
   const options = bean.options as ComponentParamOptions;
   const constructor = options.type;
 
+  // console.log(">>>>>", options);
+
   const body = ObjectCreator.create(constructor) || {};
   const bodyValue = { ...request.body };
   if (options.query) {
@@ -238,13 +240,23 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
   //目前是以json格式传递, 以后需要做form表单的格式
   handlerBodyKey(body, bodyValue);
   function handlerBodyKey(object: Object, value: Object) {
-    Object.keys(value).forEach(key => {
-      if (key in object) {
-        object[key] = value[key];
-      } else {
-        delete object[key];
-      }
-    });
+    if (options.extra && options.extra.updated) {
+      Object.keys(object).forEach(key => {
+        if (key in value) {
+          object[key] = value[key];
+        } else {
+
+          delete object[key];
+
+        }
+      });
+    } else {
+      Object.keys(value).forEach(key => {
+        if (key in object) {
+          object[key] = value[key];
+        }  
+      });
+    }
   }
 
 

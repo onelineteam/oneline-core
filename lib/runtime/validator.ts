@@ -25,8 +25,9 @@ export async function validateObject(value: Object, response: FastifyReply<http.
 
       const ruleObject: any = options.rules[key];
 
-      
-      if (ruleObject.rules.findIndex(rule => rule.ignore) > -1) {
+      const ignoreIndex = ruleObject.rules.findIndex(rule => rule.ignore);
+      // const readonlyIndex = ruleObject.rules.findIndex(rule => rule.readonly);
+      if ( ignoreIndex > -1) {
         delete value[key]; //不能更新
         continue;
       }
@@ -42,6 +43,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
 
         const isnumber = value[key].constructor === String && ruleObject.type === Number && /^\d+(\.\d+)*$/.test(value[key]);
 
+        
         if (ruleObject.type && value[key].constructor !== ruleObject.type) {
           if (!isnumber) {
             log.debug("类型不匹配:", value[key].constructor, ruleObject.type, key);
@@ -49,6 +51,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
             return -1;
           }
         }
+        
 
         if (ruleObject.rules) {
 
@@ -74,7 +77,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
             } else {
               //
               if (rule.readonly) {
-                if (value[key]) {
+                if (value[key] && rule.dao) {
                   const dao = ObjectCreator.create(rule.dao);
                   const session: MongodbSession[] = [];
                   await handlerProperty.call(dao, dao.constructor, session);

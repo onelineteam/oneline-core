@@ -35,6 +35,7 @@ export class ComponentParamOptions extends ComponentOptions {
   mode: PARAMTYPE;
   query?: any; //比如body还可以加入query中的参数
   rule?: any; //验证
+  extra?: any;
 }
 
 export class ComponentColumnOptions extends ComponentOptions {
