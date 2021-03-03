@@ -134,8 +134,8 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
   const template = Templates[methodPath];
   //函数调用
   try {
-    const methodFn = bean[origin.name||"__init"] || (() => "空地址");
-    let result: any = await methodFn(...values);
+    const methodFn = bean[origin.name] || (() => ({message:"无法找到该请求地址", code: 404, success: false, data: []}));
+    let result: any = await methodFn.call(bean, ...values);
 
     if (result) {
       if (template) {
