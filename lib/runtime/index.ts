@@ -89,6 +89,7 @@ export function init() {
 
 async function handler(request: FastifyRequest<http.IncomingMessage>, response: FastifyReply<http.ServerResponse>) {
   const origin = this.value as Function;
+   
   const options: ComponentActionOptions = this.options;
   const values = [];
   const paramNames = options.paramNames;
@@ -133,8 +134,8 @@ async function handler(request: FastifyRequest<http.IncomingMessage>, response: 
   const template = Templates[methodPath];
   //函数调用
   try {
-
-    let result: any = await bean[origin.name](...values);
+    const methodFn = bean[origin.name||"__init"] || (() => "空地址");
+    let result: any = await methodFn(...values);
 
     if (result) {
       if (template) {
