@@ -240,14 +240,15 @@ function handlerBody(request: FastifyRequest<http.IncomingMessage>, bean: Compon
   //目前是以json格式传递, 以后需要做form表单的格式
   handlerBodyKey(body, bodyValue);
   function handlerBodyKey(object: Object, value: Object) {
-    if (options.extra && options.extra.updated) {
+    const extra = options.extra;
+    if (extra && extra.updated) {
       Object.keys(object).forEach(key => {
         if (key in value) {
           object[key] = value[key];
         } else {
-
-          delete object[key];
-
+          if(extra.keep.indexOf(key) < 0) {
+            delete object[key];
+          }
         }
       });
     } else {
