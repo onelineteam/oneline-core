@@ -144,7 +144,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
               }
             }
 
-            if (rule.email) {
+            if (rule.email && value[key]) {
               const email = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
 
               if (!email.test(value[key])) {
