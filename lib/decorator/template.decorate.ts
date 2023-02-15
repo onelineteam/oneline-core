@@ -23,7 +23,8 @@ class TemplateEngine {
 
       try {
         const tempPath = parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
-        const source = fs.readFileSync(["/", tempPath].join("")).toString('utf-8');
+        //const source = fs.readFileSync(["/", tempPath].join("")).toString('utf-8');
+        const source = fs.readFileSync(tempPath).toString('utf-8');
         return this.handlebarsEngine.compile(source)(context, this.options);
       } catch (err) {
         throw err;
@@ -39,7 +40,7 @@ class TemplateEngine {
         // resolve(html);
         try {
           const filePath = parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
-          this.ejsEngine.renderFile(["/", filePath].join(""), context, this.options, (err, result) => {
+          this.ejsEngine.renderFile(filePath, context, this.options, (err, result) => {
             if (err) {
               log.debug(err);
               inject(err);

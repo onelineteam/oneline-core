@@ -5,7 +5,7 @@ const primaryObject = [String, Boolean, Number, Array, Object, Function, Date, M
 export default interface Dao<T> {
   findList(index: number, size: number, filter?: any, sort?: any);
   findListAll(filter: any, fields?: any, sort?: any);
-  findItem(filter: Object);
+  findItem(filter: Object, fields?: any);
   findCount(filter: Object);
   findSum(field: string, filter: any, privateData?: boolean);
 
@@ -58,9 +58,9 @@ export abstract class DefaultDao<T> implements Dao<T> {
     return null;
   }
 
-  async findItem(filter: Object) {
+  async findItem(filter: Object, fields:any={}) {
     log.debug(this.table, "开始查询单个:", filter);
-    return await this.session.findItem(this.table, filter);
+    return await this.session.findItem(this.table, filter, fields);
   }
 
   async findCount(filter: Object = {}) {

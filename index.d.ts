@@ -249,7 +249,7 @@ export function start(port: number, options?: WayOptions, filtersOut?: Object[],
 export interface Dao<T> {
 	findList(index: number, size: number, filter?: any, sort?: any): any;
 	findListAll(filter: any, fields?: any, sort?: any): any;
-	findItem(filter: Object): any;
+	findItem(filter: Object, fields?: any): any;
 	findCount(filter: Object): any;
 	findSum(field: string, filter: any, privateData?: boolean): any;
 	findListForeign(join: any[], index: number, size: number, filter: any, lookup?: number, sort?: any): any;
@@ -268,7 +268,7 @@ export abstract class DefaultDao<T> implements Dao<T> {
 	findList(index: number, size: number, filter?: any, sort?: any): Promise<any[]>;
 	findListAll(filter?: any, fields?: any, sort?: any): Promise<any[]>;
 	findItemForeign(join: any[], filter?: any): Promise<any>;
-	findItem(filter: Object): Promise<any>;
+	findItem(filter: Object, fields?: any): Promise<any>;
 	findCount(filter?: Object): Promise<number>;
 	findSum(field: string, filter: any, privateData?: boolean): Promise<any>;
 	save(entry: T | T[]): Promise<import("mongodb").InsertOneWriteOpResult<Pick<any, string | number | symbol> & {
@@ -306,8 +306,8 @@ export abstract class DefaultService<T> implements Service<T> {
 	findSum(field: any, filter: any, privateData?: boolean): Promise<any>;
 	findListAll(filter?: any, fields?: any, sort?: any): Promise<any>;
 	findListAllBy(filter: any, foreign?: boolean, join?: any[]): Promise<any>;
-	findItem(id: string): Promise<any>;
-	findItemBy(filter: any, foreign?: boolean, join?: any[]): Promise<any>;
+	findItem(id: string, fields?: any): Promise<any>;
+	findItemBy(filter: any, fields?:any, foreign?: boolean, join?: any[]): Promise<any>;
 	save(object: T | T[]): Promise<any>;
 	update(object: T, filter: Object): Promise<any>;
 	updateMany(object: T, filter: Object): Promise<any>;

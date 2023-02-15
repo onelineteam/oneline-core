@@ -70,7 +70,7 @@ export default class MongodbSession implements Session {
             }
             if (item.specific) {
                 project  = {...project, ...item.specific};
-                filters.push(project);
+               // filters.push(project);
             }
             if (item.unique) {
                 //暂时不需要了, 如果某个字段为空, 则数据就查询不到
@@ -87,7 +87,23 @@ export default class MongodbSession implements Session {
             // }
         });
 
-        if (Object.keys(project).length > 0) filters.push({ $project: project });
+        let $project = {$project: {}};
+       // filters.push($project);
+        if(filter["$project"]) {
+            $project.$project = {...filter["$project"]}
+            delete filter["$project"];
+        }
+
+        if (Object.keys(project).length > 0) {
+           // filters.push({ $project: project });
+           $project.$project = {...$project.$project, ...project};
+        }
+
+
+        if(Object.keys($project.$project).length > 0) {
+            filters.push($project);
+        }
+
         if (unique.length > 0) filters.push(...unique);
 
         if (MongodbSession.filter) {
@@ -162,7 +178,22 @@ export default class MongodbSession implements Session {
             // }
         });
 
-        if (Object.keys(project).length > 0) filters.push({ $project: project });
+        let $project = {$project: {}};
+        if(filter["$project"]) {
+            $project.$project = {...filter["$project"]}
+            delete filter["$project"];
+        }
+       
+        
+        if (Object.keys(project).length > 0) {
+           // filters.push({ $project: project });
+           $project.$project = {...$project.$project, ...project};
+        }
+
+        if(Object.keys($project.$project).length > 0) {
+            filters.push($project);
+        }
+
         if (unique.length > 0) filters.push(...unique);
 
         if (MongodbSession.filter) {
@@ -226,11 +257,11 @@ export default class MongodbSession implements Session {
         return await this.db.collection(table).countDocuments(filter, this.options as MongoCountPreferences);
     }
 
-    async findItem(table: string, filter: FilterQuery<any>) {
+    async findItem(table: string, filter: FilterQuery<any>, fields: any = {}) {
         if (MongodbSession.filter) {
             filter = MongodbSession.filter("findItem", filter);
         }
-        return await this.db.collection(table).findOne(filter, this.options);
+        return await this.db.collection(table).findOne(filter, {...this.options, fields});
     }
 
     async saveItem(table: string, bean: Object) {

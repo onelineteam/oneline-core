@@ -49,15 +49,15 @@ export abstract class DefaultService<T> implements Service<T> {
     return this.findListAll(filter, {}, {});
   }
 
-  async findItem(id: string) {
-    return await this.dao.findItem({ _id: id });
+  async findItem(id: string, fields: any = {}) {
+    return await this.dao.findItem({ _id: id }, fields);
   }
 
-  async findItemBy(filter: any, foreign: boolean = false, join: any[] = []) {
+  async findItemBy(filter: any, fields:any = {}, foreign: boolean = false, join: any[] = []) {
     if (foreign) {
-      return await this.dao.findItemForeign(join, filter);
+      return await this.dao.findItemForeign(join, {...filter, $project: fields});
     }
-    return await this.dao.findItem(filter);
+    return await this.dao.findItem(filter, fields);
   }
 
   async save(object: T | T[]) {
