@@ -1,6 +1,6 @@
-import { MongoClient, Db, FilterQuery, MongoCountPreferences, UpdateManyOptions, UpdateOneOptions, CommonOptions } from "mongodb";
+import { MongoClient, Db, CountDocumentsOptions, UpdateOptions, DeleteOptions } from "mongodb";
 import Session from "./session";
-import { isArray } from "util";
+import { isArray} from "util";
 
 export default class MongodbSession implements Session {
     static database: string;
@@ -23,7 +23,8 @@ export default class MongodbSession implements Session {
     async open() {
         const url = `mongodb://${MongodbSession.username}:${MongodbSession.password}@${MongodbSession.host}:${MongodbSession.port}`;
         log.debug(url);
-        this.client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        this.client = await MongoClient.connect(url, { });
+       
         this.db = await this.client.db(MongodbSession.database);
     }
 
@@ -249,15 +250,17 @@ export default class MongodbSession implements Session {
         return data;
     }
 
-    async count(table: string, filter: FilterQuery<any>): Promise<number> {
+    async count(table: string, filter: any): Promise<number> {
         if (MongodbSession.filter) {
             filter = MongodbSession.filter("count", filter);
+             
         }
+         
 
-        return await this.db.collection(table).countDocuments(filter, this.options as MongoCountPreferences);
+        return await this.db.collection(table).countDocuments(filter, this.options as CountDocumentsOptions);
     }
 
-    async findItem(table: string, filter: FilterQuery<any>, fields: any = {}) {
+    async findItem(table: string, filter: any, fields: any = {}) {
         if (MongodbSession.filter) {
             filter = MongodbSession.filter("findItem", filter);
         }
@@ -273,30 +276,33 @@ export default class MongodbSession implements Session {
         return await this.db.collection(table).insertMany(beans, this.options);
     }
 
-    async updateItem(table: string, bean: Object, wheres: FilterQuery<any>) {
+    async updateItem(table: string, bean: Object, wheres: any) {
         log.debug("更新数据: ", bean);
         if (MongodbSession.filter) {
             wheres = MongodbSession.filter("updateItem", wheres);
         }
-        return await this.db.collection(table).updateOne(wheres, { $set: bean }, this.options as UpdateOneOptions);
+        
+        return await this.db.collection(table).updateOne(wheres, { $set: bean }, this.options as UpdateOptions);
     }
 
-    async updateMany(table: string, bean: Object, wheres: FilterQuery<any>) {
+    async updateMany(table: string, bean: Object, wheres: any) {
         log.debug("更新数据: ", bean);
         if (MongodbSession.filter) {
             wheres = MongodbSession.filter("updateItem", wheres);
         }
-        return await this.db.collection(table).updateMany(wheres, { $set: bean }, this.options as UpdateManyOptions);
+         
+        return await this.db.collection(table).updateMany(wheres, { $set: bean }, this.options as UpdateOptions);
     }
 
-    async deleteItem(table: string, wheres: FilterQuery<any>) {
+    async deleteItem(table: string, wheres: any) {
         if (MongodbSession.filter) {
             wheres = MongodbSession.filter("deleteItem", wheres);
         }
-        return await this.db.collection(table).deleteOne(wheres, this.options as CommonOptions);
+         
+        return await this.db.collection(table).deleteOne(wheres, this.options as DeleteOptions);
     }
 
-    async deleteList(table: string, wheres: FilterQuery<any>) {
+    async deleteList(table: string, wheres: any) {
         log.debug("where", wheres);
         if (MongodbSession.filter) {
             wheres = MongodbSession.filter("deleteList", wheres);
@@ -304,10 +310,17 @@ export default class MongodbSession implements Session {
         return await this.db.collection(table).deleteMany(wheres, this.options);
     }
 
-    close() {
-        log.debug("关闭链接", this.client.isConnected()); 
-        if (this.client && this.client.isConnected()) {
-            this.client.close();
+    async close() {
+        
+        // log.debug("关闭链接", this.client.isConnected()); 
+        // if (this.client && this.client.isConnected()) {
+        //     this.client.close();
+        // }
+        try {
+           this.client && await this.client.close();
+           log.debug("关闭连接成功");
+        } catch (err) {
+           log.debug("关闭连接失败");
         }
     }
 }

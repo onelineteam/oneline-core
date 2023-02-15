@@ -1,5 +1,5 @@
 import Dao from "./dao";
-import { ObjectID } from "bson";
+import { ObjectId } from "bson";
 import { Component, parsePage } from "../../../";
 import { ClientSession, Db } from "mongodb";
 export interface Service<T> {
@@ -73,7 +73,7 @@ export abstract class DefaultService<T> implements Service<T> {
   }
 
   async delete(id: string) {
-    return await this.dao.delete({ _id: new ObjectID(id) });
+    return await this.dao.delete({ _id: new ObjectId(id) });
   }
 
   async deleteBy(filter: Object, multi: boolean = false) {

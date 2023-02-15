@@ -1,7 +1,7 @@
 
 import { FastifyReply, FastifyInstance, FastifyRequest } from 'fastify';
 import { ServerResponse, IncomingMessage, Server } from 'http';
-import { MongoClient, Db, FilterQuery, ClientSession, ObjectID  } from 'mongodb';
+import { MongoClient, Db, ClientSession, ObjectId  } from 'mongodb';
 /// <reference types="node" />
 export {FastifyReply, FastifyRequest, FastifyInstance} from 'fastify';
 export enum ComponentType {
@@ -169,18 +169,14 @@ export class MongodbSession implements Session {
 	findByForeignCount(table: string, join: Array<any>, filter: Object|Array<any>, lookup?: number): Promise<number>;
 	findCore(table: string, index: number, size: number, filter: Object, sort?: any, fields?: any): Promise<any[]>;
 	find(table: string, filter: any, sort: any, fields: any): Promise<any[]>;
-	count(table: string, filter: FilterQuery<any>): Promise<number>;
-	findItem(table: string, filter: FilterQuery<any>): Promise<any>;
-	saveItem(table: string, bean: Object): Promise<import("mongodb").InsertOneWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: ObjectId;
-	}>>;
-	saveList(table: string, beans: Array<Object>): Promise<import("mongodb").InsertWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: ObjectId;
-	}>>;
-	updateItem(table: string, bean: Object, wheres: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
-	updateMany(table: string, bean: Object, wheres: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
-	deleteItem(table: string, wheres: FilterQuery<any>): Promise<import("mongodb").DeleteWriteOpResultObject>;
-	deleteList(table: string, wheres: FilterQuery<any>): Promise<import("mongodb").DeleteWriteOpResultObject>;
+	count(table: string, filter: any): Promise<number>;
+	findItem(table: string, filter: any): Promise<any>;
+	saveItem(table: string, bean: Object): Promise<any>;
+	saveList(table: string, beans: Array<Object>): Promise<any>;
+	updateItem(table: string, bean: Object, wheres: any): Promise<any>;
+	updateMany(table: string, bean: Object, wheres: any): Promise<any>;
+	deleteItem(table: string, wheres: any): Promise<any>;
+	deleteList(table: string, wheres: any): Promise<any>;
 	close(): void;
 	batch(table: string, isOrder: boolean, callback: Function): Promise<void>;
 }
@@ -255,8 +251,8 @@ export interface Dao<T> {
 	findListForeign(join: any[], index: number, size: number, filter: any, lookup?: number, sort?: any): any;
 	findItemForeign(join: any[], filter: any): any;
 	save(object: T | T[]): any;
-	update(object: T, filter: FilterQuery<any>): any;
-	updateMany(entry: T, filter: FilterQuery<any>): any;
+	update(object: T, filter: any): any;
+	updateMany(entry: T, filter: any): any;
 	delete(filter: Object, multi?: boolean): any;
 }
 export abstract class DefaultDao<T> implements Dao<T> {
@@ -271,15 +267,11 @@ export abstract class DefaultDao<T> implements Dao<T> {
 	findItem(filter: Object, fields?: any): Promise<any>;
 	findCount(filter?: Object): Promise<number>;
 	findSum(field: string, filter: any, privateData?: boolean): Promise<any>;
-	save(entry: T | T[]): Promise<import("mongodb").InsertOneWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: ObjectID;
-	}> | import("mongodb").InsertWriteOpResult<Pick<any, string | number | symbol> & {
-		_id: ObjectID;
-	}>>;
+	save(entry: T | T[]): Promise<any>;
 	operationByTransaction(callback: (cs: ClientSession, db: Db) => void): Promise<boolean>;
-	update(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
-	updateMany(entry: T, filter: FilterQuery<any>): Promise<import("mongodb").UpdateWriteOpResult>;
-	delete(filter: Object, multi?: boolean): Promise<import("mongodb").DeleteWriteOpResultObject>;
+	update(entry: T, filter: any): Promise<any>;
+	updateMany(entry: T, filter: any): Promise<any>;
+	delete(filter: Object, multi?: boolean): Promise<any>;
 	transaction(callback: (cs: ClientSession, db: Db) => void, binds: any,  options: any, sessionOption?:any): Promise<boolean>;
 	batch(callback:Function, isOrder: boolean): Promise<void>;
 }
@@ -374,7 +366,7 @@ export interface WayLog {
 export const log:WayLog;
 
 export const idGenerator: {
-	objectId(id?: string): string;
+	ObjectId(id?: string): string;
 };
 
 

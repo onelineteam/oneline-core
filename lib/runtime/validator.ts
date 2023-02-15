@@ -6,7 +6,7 @@
 import { ComponentBean, ComponentStore, ComponentColumnOptions, HttpResult, MongodbSession, handlerProperty, closeSessionQuick, isArray } from "..";
 import { FastifyReply } from "fastify";
 import { ObjectCreator } from "./object-creator";
-import { ObjectID } from "mongodb";
+import { ObjectId } from "mongodb";
 import * as http from "http";
 
 export async function validateObject(value: Object, response: FastifyReply<http.ServerResponse>, ruleMap: any = undefined): Promise<number> {
@@ -98,7 +98,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
                   if (rule.value && typeof rule.value === "function") {
                     value[key] = rule.value();
                   } else {
-                    value[key] = new ObjectID().toHexString();
+                    value[key] = new ObjectId().toHexString();
                   }
                 } else {
                   value["isUpdate"] = true; // 
@@ -106,7 +106,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
               } else if (rule.value && typeof rule.value === "function") {
                 value[key] = rule.value();
               } else {
-                value[key] = new ObjectID().toHexString();
+                value[key] = new ObjectId().toHexString();
               }
             }
 

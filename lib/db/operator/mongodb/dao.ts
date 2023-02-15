@@ -1,4 +1,4 @@
-import { FilterQuery, ObjectID, ClientSession, Db } from "mongodb";
+import {ClientSession, Db } from "mongodb";
 import { MongodbSession, Component } from "../../..";
 
 const primaryObject = [String, Boolean, Number, Array, Object, Function, Date, Math, Set];
@@ -13,8 +13,8 @@ export default interface Dao<T> {
   findItemForeign(join: any[], filter: any);
 
   save(object: T | T[]);
-  update(object: T, filter: FilterQuery<any>);
-  updateMany(entry: T, filter: FilterQuery<any>);
+  update(object: T, filter: any);
+  updateMany(entry: T, filter: any);
   delete(filter: Object, multi?: boolean);
   transaction(callback: (cs: ClientSession, db: Db) => void, binds: any, options: any, sessionOption?: any): Promise<boolean>;
 }
@@ -165,11 +165,11 @@ export abstract class DefaultDao<T> implements Dao<T> {
     return ok;
   }
 
-  async update(entry: T, filter: FilterQuery<any>) {
+  async update(entry: T, filter: any) {
     return await this.session.updateItem(this.table, entry, filter);
   }
 
-  async updateMany(entry: T, filter: FilterQuery<any>) {
+  async updateMany(entry: T, filter: any) {
     return await this.session.updateMany(this.table, entry, filter);
   }
 
