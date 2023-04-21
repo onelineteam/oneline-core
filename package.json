@@ -1,6 +1,6 @@
 {
   "name": "@oneline/core",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "description": "一个快速开发web系统的框架",
   "main": "dist/index.js",
   "publishConfig": {
@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "cwatch": "tsc --watch",
     "build": "tsc",
-    "prepublish": "yarn run build"
+    "prepublish": "yarn run build",
+    "pub": "yarn publish --access=public"
   },
   "author": "towaywu@gmail.com",
   "license": "MIT",
