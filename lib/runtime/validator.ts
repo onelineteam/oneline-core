@@ -180,7 +180,7 @@ export async function validateObject(value: Object, response: FastifyReply<http.
 
                 if (rule.self) {
                   const sourceItem = await dao[rule.method]({ [rule.key]: value[rule.key] });
-                  if (sourceItem[key] !== value[key]) {
+                  if (sourceItem && sourceItem[key] !== value[key]) {
                     item = await dao[rule.method]({ ...filter });
                   }
                 } else {
