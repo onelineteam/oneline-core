@@ -9,3 +9,18 @@ export function parsePage(total: number, index: number, size: number) {
      prev: prev
   }
 }
+
+export function padLeft(value: number): string {
+   return value < 10 ? `0${value}` : `${value}`;
+}
+
+export function time_now() {
+   const now = new Date();
+   let month:any = now.getMonth() + 1;
+   month = month < 10 ? "0" + month : month;
+
+  
+   let time =  now.getFullYear() + '-' + padLeft(now.getMonth() + 1) + '-' + padLeft(now.getDate());
+   time += " " + padLeft(now.getHours()) + ":" + padLeft(now.getMinutes()) + ":" + padLeft(now.getSeconds());
+   return time;
+}
