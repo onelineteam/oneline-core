@@ -361,12 +361,13 @@ export interface WayLog {
 	error(...args:any[]): void;
 	debug(...args:any[]): void;
 	info(...args:any[]): void;
+	file(...args:any[]): void;
 }
 
 export const log:WayLog;
 
 export const idGenerator: {
-	ObjectId(id?: string): string;
+	objectId(id?: string): string;
 };
 
 
