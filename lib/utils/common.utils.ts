@@ -29,7 +29,7 @@ export function time_now() {
 //darwin, win32, linux
 export function isOs(osName: string|string[]): boolean {
 
-   const platform = os.platform();
+   const platform:string = os.platform();
   
    let bool = true;
    
@@ -38,7 +38,7 @@ export function isOs(osName: string|string[]): boolean {
    }
 
    osName.forEach(item => {
-      bool ||= (platform == item);
+      bool ||= (platform.toLocaleLowerCase() == item.toLocaleLowerCase());
    })
 
    return bool;
