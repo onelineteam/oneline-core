@@ -1,4 +1,4 @@
-const os = require('os');
+import * as os from 'os';
 export function parsePage(total: number, index: number, size: number) {
   const page = Math.ceil(total/size);
   const next = (index * size) >= total ? index: index+1;
@@ -31,7 +31,7 @@ export function isOs(osName: string|string[]): boolean {
 
    const platform:string = os.platform();
   
-   let bool = true;
+   let bool = false;
    
    if(typeof osName === "string") {
       osName = [osName];

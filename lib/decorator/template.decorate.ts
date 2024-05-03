@@ -7,7 +7,8 @@ import { isOs } from '..';
 class TemplateEngine {
   errorJsonFormat: boolean = true;
   type: string = 'application/json';
-  rootPath: string = isOs(["linux", "darwin"]) ? `/${path.resolve()}` : path.resolve();
+    rootPath: string = path.resolve();
+ 
   viewPath: string = "view";
   options: any = {};
   engines: any = {};
@@ -23,7 +24,7 @@ class TemplateEngine {
       if (this.handlebarsEngine == null) throw new Error("请先设置你的handlebarsEngine");
 
       try {
-        const tempPath = parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
+        const tempPath = (isOs(["linux", "darwin"]) ? '/':'') + parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
         //const source = fs.readFileSync(["/", tempPath].join("")).toString('utf-8');
         const source = fs.readFileSync(tempPath).toString('utf-8');
         return this.handlebarsEngine.compile(source)(context, this.options);
@@ -40,7 +41,7 @@ class TemplateEngine {
         // const html = this.ejsEngine.render(source, context, this.options);
         // resolve(html);
         try {
-          const filePath = parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
+          const filePath =  (isOs(["linux", "darwin"]) ? '/':'') + parsePathParams([this.rootPath, this.viewPath, temp].join("/"), context);
           this.ejsEngine.renderFile(filePath, context, this.options, (err, result) => {
             if (err) {
               log.debug(err);
