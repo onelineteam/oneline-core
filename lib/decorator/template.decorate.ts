@@ -2,11 +2,12 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { parsePathParams } from '@oneline/utils';
+import { isOs } from '..';
 
 class TemplateEngine {
   errorJsonFormat: boolean = true;
   type: string = 'application/json';
-  rootPath: string = path.resolve();
+  rootPath: string = isOs(["linux", "darwin"]) ? `/${path.resolve()}` : path.resolve();
   viewPath: string = "view";
   options: any = {};
   engines: any = {};

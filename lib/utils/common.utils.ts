@@ -1,3 +1,4 @@
+const os = require('os');
 export function parsePage(total: number, index: number, size: number) {
   const page = Math.ceil(total/size);
   const next = (index * size) >= total ? index: index+1;
@@ -24,3 +25,24 @@ export function time_now() {
    time += " " + padLeft(now.getHours()) + ":" + padLeft(now.getMinutes()) + ":" + padLeft(now.getSeconds());
    return time;
 }
+
+//darwin, win32, linux
+export function isOs(osName: string|string[]): boolean {
+
+   const platform = os.platform();
+  
+   let bool = true;
+   
+   if(typeof osName === "string") {
+      osName = [osName];
+   }
+
+   osName.forEach(item => {
+      bool ||= (platform == item);
+   })
+
+   return bool;
+  
+}
+ 
+ 
