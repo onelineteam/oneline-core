@@ -85,7 +85,8 @@ export interface OnelineLogOptions  {
   showMethodName?: boolean, 
   showConsoleColors?: boolean, 
   showLogLevel?: boolean, 
-  showDev?: boolean
+  showDev?: boolean,
+	logFile?: string,
 }
 
 export function logSetting(options: OnelineLogOptions):void;
