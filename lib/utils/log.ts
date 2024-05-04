@@ -19,7 +19,7 @@ export function logSetting(options: OnelineLogOptions) {
     let format = `${time_now()}: ${args.join(" ")}`;
     Log["$log"].debug(format);
     const logfile = options.logFile || "oneline.log";
-    fs.appendFile(logfile + "\r\n", format, (err) => {
+    fs.appendFile(logfile, format + "\r\n", (err) => {
       err && Log['$log'].debug(err);
     });
 
