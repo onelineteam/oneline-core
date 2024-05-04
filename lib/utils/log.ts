@@ -17,8 +17,9 @@ export function logSetting(options: OnelineLogOptions) {
   Logger.default.install(Log, options);
   Log['$log']["file"] = (...args) => {
     let format = `${time_now()}: ${args.join(" ")}`;
-    const logfile = options.logFile || "onelined.log";
-    fs.appendFile(logfile, format, (err) => {
+    Log["$log"].debug(format);
+    const logfile = options.logFile || "oneline.log";
+    fs.appendFile(logfile + "\r\n", format, (err) => {
       err && Log['$log'].debug(err);
     });
 
